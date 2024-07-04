@@ -18,7 +18,7 @@ App made by: [Julian Wergieluk](https://www.linkedin.com/in/julian-wergieluk/) +
 [George Whelan](https://www.linkedin.com/in/george-whelan-30582720/) = 
 [LOLML GmbH](https://lolml.com/)
 
-Like what you see? :sparkles: Let's meet at the fair :coffee: and talk about your ML project.
+Like what you see? :sparkles: Let's have a :coffee: and talk about your next ML project.
 """
 COL_FAV = "fav"
 st.set_page_config(page_title=APP_TITLE, page_icon=":rocket:", layout="wide")
