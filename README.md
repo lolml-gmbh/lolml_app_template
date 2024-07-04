@@ -1,8 +1,14 @@
 # LOLML App template
 
+This is a simple streamlit app template repo. 
+
+### Screenshot
+
+![screenshot.png](screenshot.png)
+
 # Installation
 
-This is a simple streamlit app template repo. 
+
 
 The following installation instructions use the Conda package 
 manager. The instructions also work verbatim with `Mamba` and `micromamba`.
