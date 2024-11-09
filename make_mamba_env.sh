@@ -6,6 +6,10 @@ set -u
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd "${DIR}"
 source .env.shared
+if [ -f .env ]; then
+    source .env
+fi
+source .env
 
 if [ ! -f "${MAMBA}" ]; then
     curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
