@@ -1,11 +1,5 @@
 ### project specific ignores
 
-fav_events.txt
-*.xlsx
-projects/
-idoc/**/*.txt
-test/results
-
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/

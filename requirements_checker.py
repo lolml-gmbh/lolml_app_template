@@ -1,13 +1,20 @@
 # Copyright (c) 2024 [LOLML GmbH](https://lolml.com/), Julian Wergieluk, George Whelan
 import json
 import os
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
 
+from dotenv import load_dotenv
+
 DEFAULT_CMP_OP = ">="
-DEFAULT_ENV_NAME = "aiewf"
-PACKAGE_MANAGER = os.getenv("PACKAGE_MANAGER", "micromamba")
+
+if os.path.exists(".env.shared"):
+    load_dotenv(".env.shared")
+load_dotenv(".env")
+PACKAGE_MANAGER = os.getenv("PACKAGE_MANAGER", "conda")
+DEFAULT_ENV_NAME = os.getenv("ENV_NAME", "lolbot")
 
 
 @dataclass
@@ -30,6 +37,8 @@ def read_package_specs(file_path: str) -> list[PackageSpec]:
             continue
         cmp_op = ""
         version = ""
+        if "#" in package_line:
+            package_line = package_line.split("#")[0].strip()
         if "<" in package_line and "<=" not in package_line:
             raise ValueError(f"Package line {i}: {package_line}: operator `<` is not supported")
         if ">" in package_line and ">=" not in package_line:
@@ -84,6 +93,18 @@ def get_env_package_versions(env_name: str) -> dict[str, str]:
     return env_package_versions
 
 
+def version_less_op(version0: str, version1: str) -> bool:
+    # Evaluate x0.y0.z0 < x1.y1.z1
+    v0 = version0.split(".")
+    v1 = version1.split(".")
+    for i in range(max(len(v0), len(v1))):
+        if int(v0[i]) < int(v1[i]):
+            return True
+        if int(v0[i]) > int(v1[i]):
+            return False
+    return False  # Add this line to handle cases where versions are equal
+
+
 def update_package_versions_from_env(
     package_specs: list[PackageSpec], env_name: str, ignore_missing: bool = False
 ) -> list[PackageSpec]:
@@ -93,7 +114,7 @@ def update_package_versions_from_env(
     for name, spec in package_specs_dict.items():
         if name in env_package_versions:
             env_version = env_package_versions[name]
-            if spec.version and env_version < spec.version:
+            if spec.version and version_less_op(env_version, spec.version):
                 raise ValueError(
                     f"Environment {env_name} has version {env_version} of package {name}, but "
                     f"{spec.version} is required"
@@ -102,7 +123,7 @@ def update_package_versions_from_env(
             updated_spec = PackageSpec(name=name, version=env_version, cmp_op=cmp_op)
             updated_package_specs.append(updated_spec)
         elif not ignore_missing:
-            raise ValueError(f"Package {name} not found in environment {env_name}")
+            raise ValueError(f"Package '{name}' not found in the environment '{env_name}'")
         else:
             updated_package_specs.append(spec)
     return updated_package_specs
@@ -123,24 +144,40 @@ def check_requirements(env_name: str, path: str) -> None:
             raise ValueError(f"Package '{package.name}' not found in the environment '{env_name}'")
 
 
-def main(args: list[str]) -> None:
+def check_package_manager(package_manager: str) -> bool:
+    if shutil.which(package_manager):
+        result = subprocess.run([package_manager, "--version"], capture_output=True)
+        return result.returncode == 0
+    return False
+
+
+def main(args: list[str]) -> int:
+    if not check_package_manager(PACKAGE_MANAGER):
+        print(f"Package manager '{PACKAGE_MANAGER}' not found in PATH")
+        return 1
+
     if not args:
-        print("Usage: python package_versions.py [update|check] [env_name]")
-        return
+        print("Usage: python requirements_checker.py [update|check] [env_name]")
+        return 0
     env = args[1] if len(args) > 1 else DEFAULT_ENV_NAME
     if not env:
         print("No environment name provided")
-        return
+        return 1
 
-    if args[0] in ("update", "u"):
-        update_requirements(env, "conda_packages.txt")
-        update_requirements(env, "pip_packages.txt", True)
-        return
-    if args[0] in ("check", "c"):
-        check_requirements(env, "conda_packages.txt")
-        check_requirements(env, "pip_packages.txt")
-        return
+    try:
+        if args[0] in ("update", "u"):
+            update_requirements(env, "requirements_conda.txt")
+            update_requirements(env, "requirements_pip.txt", True)
+            return 0
+        if args[0] in ("check", "c"):
+            check_requirements(env, "requirements_conda.txt")
+            check_requirements(env, "requirements_pip.txt")
+            return 0
+    except ValueError as e:
+        print(f"REQUIREMENTS CHECKER ERROR: {e}")
+        return 1
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    return_code = main(sys.argv[1:])
+    sys.exit(return_code)

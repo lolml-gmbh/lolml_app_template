@@ -1,0 +1,8 @@
+click>=8.1.7
+pandas>=2.2.3
+python>=3.12.7
+requests>=2.32.3
+ruff>=0.7.3
+streamlit>=1.40.0
+tqdm>=4.67.0
+python-dotenv>=1.0.1
