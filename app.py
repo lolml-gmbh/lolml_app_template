@@ -1,4 +1,4 @@
-# Copyright (c) 2024 LOLML GmbH (https://lolml.com/), Julian Wergieluk, George Whelan
+# Copyright (c) 2024-2025 LOLML GmbH (https://lolml.com/), Julian Wergieluk, George Whelan
 import streamlit as st
 
 APP_TITLE = "LOLML App Template"
@@ -14,9 +14,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 COPYRIGHT_LINE = """
-App made by: [Julian Wergieluk](https://www.linkedin.com/in/julian-wergieluk/) + 
-[George Whelan](https://www.linkedin.com/in/george-whelan-30582720/) = 
-[LOLML GmbH](https://lolml.com/)
+App made by: LOLML GmbH](https://lolml.com/)
 
 Like what you see? :sparkles: Let's have a :coffee: and talk about your next ML project.
 """

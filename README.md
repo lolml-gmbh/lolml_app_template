@@ -42,7 +42,7 @@ The app should now be running on `http://localhost:8501` in your browser.
 
 # Copyright and License
 
-Copyright (c) 2024 [LOLML GmbH](https://lolml.com/), Julian Wergieluk, George Whelan
+Copyright (c) 2024-2025 [LOLML GmbH](https://lolml.com/)
 
 MIT License: see LICENSE file for details.
 
