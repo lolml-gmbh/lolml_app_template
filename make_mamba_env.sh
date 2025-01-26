@@ -9,13 +9,14 @@ source .env.shared
 if [ -f .env ]; then
     source .env
 fi
-source .env
 
+MAMBA=$(command -v micromamba 2>/dev/null || echo "${HOME}/.local/bin/micromamba")
 if [ ! -f "${MAMBA}" ]; then
     curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
     mkdir -p $(dirname ${MAMBA})
     mv bin/micromamba ${MAMBA}
     rm -rf bin
+    chmod a+x ${MAMBA}
 fi
 
 ${MAMBA} self-update --yes

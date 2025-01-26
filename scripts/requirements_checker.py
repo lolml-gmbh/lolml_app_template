@@ -97,7 +97,9 @@ def version_less_op(version0: str, version1: str) -> bool:
     # Evaluate x0.y0.z0 < x1.y1.z1
     v0 = version0.split(".")
     v1 = version1.split(".")
-    for i in range(max(len(v0), len(v1))):
+    num_version_parts = min(len(v0), len(v1))
+    num_version_parts = min(num_version_parts, 3)
+    for i in range(num_version_parts):
         if int(v0[i]) < int(v1[i]):
             return True
         if int(v0[i]) > int(v1[i]):
