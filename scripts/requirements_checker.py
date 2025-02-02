@@ -93,10 +93,14 @@ def get_env_package_versions(env_name: str) -> dict[str, str]:
     return env_package_versions
 
 
+def remove_non_digit_chars(version: str) -> str:
+    return "".join([c for c in version if c.isdigit()])
+
+
 def version_less_op(version0: str, version1: str) -> bool:
     # Evaluate x0.y0.z0 < x1.y1.z1
-    v0 = version0.split(".")
-    v1 = version1.split(".")
+    v0 = [remove_non_digit_chars(v) for v in version0.split(".")]
+    v1 = [remove_non_digit_chars(v) for v in version1.split(".")]
     num_version_parts = min(len(v0), len(v1))
     num_version_parts = min(num_version_parts, 3)
     for i in range(num_version_parts):
@@ -177,7 +181,7 @@ def main(args: list[str]) -> int:
             return 0
     except ValueError as e:
         print(f"REQUIREMENTS CHECKER ERROR: {e}")
-        return 1
+        raise
 
 
 if __name__ == "__main__":
