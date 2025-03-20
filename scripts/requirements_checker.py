@@ -1,4 +1,4 @@
-# Copyright (c) 2024 [LOLML GmbH](https://lolml.com/), Julian Wergieluk, George Whelan
+# Copyright (c) 2024-2025 [LOLML GmbH](https://lolml.com/)
 import json
 import os
 import shutil
