@@ -10,8 +10,8 @@ This is a simple streamlit app template repo.
 
 
 
-The following installation instructions use the Conda package 
-manager. The instructions also work verbatim with `Mamba` and `micromamba`.
+The following installation instructions use the `micromamba` package manager. 
+The instructions also work verbatim with `Conda` and `Mamba`.
 
 ## Local Installation
 
@@ -26,17 +26,14 @@ git clone [repo_url]
 While in the repository directory, run the following command in a terminal:
 
 ```
-conda create -n lolml --yes --file conda_packages.txt -c conda-forge
-conda activate lolml
+./make_mamba_env.sh
 ```
 
 ### Run the app:
 
 - Navigate to the repository directory in your terminal.
 - Activate the `lolml` environment (`conda activate lolml`).
-- Run the app with streamlit: `streamlit run app.py`.
-- Access app in your browser at `http://localhost:8501`.
-
+- Run the app with streamlit: `./run_app.sh`.
 
 The app should now be running on `http://localhost:8501` in your browser.
 
@@ -55,3 +52,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
