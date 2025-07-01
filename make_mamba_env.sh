@@ -24,3 +24,5 @@ $MAMBA create -n "${ENV_NAME}" -c conda-forge -c pytorch --channel-priority stri
 if [ -f "${DIR}/requirements_pip.txt" ]; then
     $MAMBA run -n ${ENV_NAME} pip install --upgrade -r requirements_pip.txt
 fi
+
+./x_import_tools.sh refresh
