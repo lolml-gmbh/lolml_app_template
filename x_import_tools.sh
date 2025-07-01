@@ -15,7 +15,8 @@ X_FILE_LIST='x_files.txt'
 
 mkdir -p scripts
 
-if [[ $# -eq 0 ]]; then
+if [[ $# -eq 1 && "$1" == "refresh" ]]; then
+  echo "Downloading ${X_FILE_LIST} from ${ROOT_URL}/${X_FILE_LIST}"
   rm -f "${X_FILE_LIST}"
   curl -o "${X_FILE_LIST}" "${ROOT_URL}/${X_FILE_LIST}"
   for f in $(cat "${X_FILE_LIST}"); do
@@ -25,6 +26,7 @@ fi
 
 for f in $(cat "${X_FILE_LIST}"); do
   if [[ ! -f "${f}" ]]; then
+    echo "Downloading ${f} from ${ROOT_URL}/${f}"
     curl -o "${f}" "${ROOT_URL}/${f}"
   fi
 done
