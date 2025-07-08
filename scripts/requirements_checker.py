@@ -1,10 +1,10 @@
-# Copyright (c) 2024-2025 [LOLML GmbH](https://lolml.com/)
+# Copyright (c) 2024 [LOLML GmbH](https://lolml.com/), Julian Wergieluk, George Whelan
 import json
 import os
 import shutil
 import subprocess
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from dotenv import load_dotenv
 
@@ -22,6 +22,17 @@ class PackageSpec:
     name: str
     version: str
     cmp_op: str
+    install_from_url: str = field(default="")
+
+
+def get_package_name_from_url(url: str) -> str:
+    # Ex: 'git+ssh://git@github.com/lolml-gmbh/portfolio_tracker.git@main'
+    package_name = url.split("/")[-1]
+    if "@" in url:
+        package_name = package_name.split("@")[0]
+    if package_name.endswith(".git"):
+        package_name = package_name[:-4]
+    return package_name
 
 
 def read_package_specs(file_path: str) -> list[PackageSpec]:
@@ -37,6 +48,14 @@ def read_package_specs(file_path: str) -> list[PackageSpec]:
             continue
         cmp_op = ""
         version = ""
+        if package_line.startswith("git+ssh") or package_line.startswith("git+http"):
+            package_name = get_package_name_from_url(package_line)
+            package_data.append(
+                PackageSpec(
+                    name=package_name, version=version, cmp_op=cmp_op, install_from_url=package_line
+                )
+            )
+            continue
         if "#" in package_line:
             package_line = package_line.split("#")[0].strip()
         if "<" in package_line and "<=" not in package_line:
@@ -63,6 +82,8 @@ def write_package_specs(file_path: str, package_specs: list[PackageSpec]):
     for package_spec in package_specs:
         if package_spec.cmp_op:
             spec_lines.append(f"{package_spec.name}{package_spec.cmp_op}{package_spec.version}")
+        elif package_spec.install_from_url:
+            spec_lines.append(f"{package_spec.install_from_url}")
         else:
             spec_lines.append(f"{package_spec.name}")
 
