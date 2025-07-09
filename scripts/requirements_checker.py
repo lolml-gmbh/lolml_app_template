@@ -80,7 +80,7 @@ def read_package_specs(file_path: str) -> list[PackageSpec]:
 def write_package_specs(file_path: str, package_specs: list[PackageSpec]):
     spec_lines = []
     for package_spec in package_specs:
-        if package_spec.cmp_op:
+        if package_spec.cmp_op and not package_spec.install_from_url:
             spec_lines.append(f"{package_spec.name}{package_spec.cmp_op}{package_spec.version}")
         elif package_spec.install_from_url:
             spec_lines.append(f"{package_spec.install_from_url}")
@@ -147,7 +147,7 @@ def update_package_versions_from_env(
                     f"{spec.version} is required"
                 )
             cmp_op = spec.cmp_op if spec.cmp_op else DEFAULT_CMP_OP
-            updated_spec = PackageSpec(name=name, version=env_version, cmp_op=cmp_op)
+            updated_spec = PackageSpec(name=name, version=env_version, cmp_op=cmp_op, install_from_url=spec.install_from_url)
             updated_package_specs.append(updated_spec)
         elif not ignore_missing:
             raise ValueError(f"Package '{name}' not found in the environment '{env_name}'")
