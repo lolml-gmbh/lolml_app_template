@@ -1,5 +1,5 @@
 line-length = 100
-target-version = "py312"
+target-version = "py313"
 
 [lint]
 select = [
@@ -12,4 +12,7 @@ select = [
     "UP",
     "YTT",
     "FLY",
+]
+ignore = [
+    'N812',
 ]
