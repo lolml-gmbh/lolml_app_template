@@ -4,6 +4,8 @@ target-version = "py313"
 [lint]
 select = [
     "A",
+    "ANN",
+    "BLE",
     "E",
     "F",
     "B",
@@ -15,4 +17,5 @@ select = [
 ]
 ignore = [
     'N812',
+    'ANN401',
 ]

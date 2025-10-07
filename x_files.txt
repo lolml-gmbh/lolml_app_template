@@ -1,3 +1,2 @@
 scripts/requirements_checker.py
 scripts/port_finder.py
-ruff.toml
